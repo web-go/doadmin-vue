@@ -9,26 +9,18 @@
       :form-options="formOptions"
       @dialog-open="handleDialogOpen"
       @row-add="handleRowAdd"
-      @row-edit="handleRowEdit"
       @dialog-cancel="handleDialogCancel"
     >
       <el-button slot="header" style="margin-bottom: 5px" @click="addRow">
         新增
       </el-button>
       <el-button
-        type="primary"
         slot="header"
+        type="primary"
         style="margin-bottom: 5px"
         @click="addRowWithNewTemplate"
       >
         新建
-      </el-button>
-      <el-button
-        slot="header"
-        style="margin-bottom: 5px"
-        @click="editRowWithNewTemplate"
-      >
-        使用自定义模板编辑第三行
       </el-button>
     </d2-crud>
   </div>
