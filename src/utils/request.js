@@ -75,8 +75,7 @@ service.interceptors.response.use(
           break
         case 403:
           router.replace({
-            path: '404',
-            query: { redirect: router.currentRoute.path }
+            path: '403'
           })
           break
         case 401:

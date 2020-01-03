@@ -52,11 +52,7 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-        label="名称"
-        min-width="150px"
-        prop="name"
-      ></el-table-column>
+      <el-table-column label="名称" min-width="150px" prop="name" />
       <!-- <el-table-column label="创建时间" align="center">
         <template slot-scope="{ row }">
           <span>{{ row.created_at | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
@@ -70,16 +66,15 @@
         class-name="small-padding fixed-width"
       >
         <template slot-scope="{ row }">
-          <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">
             修改
+          </el-button> -->
+          <el-button size="mini" type="success" @click="opdendrawer(row)">
+            设置权限
           </el-button>
+
           <el-popconfirm title="确定删除？" @onConfirm="handleDelete(row)">
-            <el-button
-              slot="reference"
-              v-if="row.status != 'deleted'"
-              size="mini"
-              type="danger"
-            >
+            <el-button slot="reference" size="mini" type="danger">
               删除
             </el-button>
           </el-popconfirm>
@@ -120,19 +115,31 @@
         </el-button>
       </div>
     </el-dialog>
+
+    <el-drawer
+      v-if="drawer"
+      :visible.sync="drawer"
+      :with-header="true"
+      size="40%"
+      title="角色配置"
+    >
+      <el-tabs class="role-box" type="border-card">
+        <el-tab-pane label="角色菜单">
+          <menus :row="activeRow" />
+        </el-tab-pane>
+        <el-tab-pane label="角色api">
+          <apis :row="activeRow" />
+        </el-tab-pane>
+      </el-tabs>
+    </el-drawer>
   </div>
 </template>
 
 <script>
-import {
-  fetchRoles,
-  fetchRole,
-  createRole,
-  updateRole,
-  deleteRole
-} from '@/api/roles'
+import Menus from './components/menus'
+import Apis from './components/apis'
+import { fetchRoles, createRole, updateRole, deleteRole } from '@/api/roles'
 import waves from '@/directive/waves' // waves directive
-import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
 
 const calendarTypeOptions = [
@@ -150,7 +157,7 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination },
+  components: { Pagination, Menus, Apis },
   directives: { waves },
   filters: {
     statusFilter(status) {
@@ -165,6 +172,7 @@ export default {
       return calendarTypeKeyValue[type]
     }
   },
+
   data() {
     return {
       tableKey: 0,
@@ -190,11 +198,11 @@ export default {
 
       rules: {
         name: [{ required: true, message: '名称必填', trigger: 'blur' }]
-      }
+      },
+
+      drawer: false,
+      activeRow: {}
     }
-  },
-  created() {
-    this.getList()
   },
   computed: {
     searchQuery() {
@@ -205,7 +213,14 @@ export default {
       }
     }
   },
+  created() {
+    this.getList()
+  },
   methods: {
+    opdendrawer(row) {
+      this.drawer = true
+      this.activeRow = row
+    },
     getList() {
       this.listLoading = true
 
@@ -244,7 +259,9 @@ export default {
     resetTemp() {
       this.temp = {
         id: undefined,
-        name: ''
+        name: '',
+        menus: [],
+        apis: []
       }
     },
     handleCreate() {
@@ -334,7 +351,7 @@ export default {
           const index = this.list.indexOf(row)
           this.list.splice(index, 1)
         })
-        .catch(err => {
+        .catch(() => {
           this.$notify({
             title: '失败',
             message: '删除失败',
@@ -344,13 +361,20 @@ export default {
         })
     },
     getSortClass: function(key) {
-      const sort = this.listQuery.sort
-      return sort === `+${key}`
-        ? 'ascending'
-        : sort === `-${key}`
-        ? 'descending'
-        : ''
+      // const sort = this.listQuery.sort
+      return 'descending'
+      // return sort === `+${key}`
+      //   ? 'ascending'
+      //   : sort === `-${key}`
+      //   ? 'descending'
+      //   : ''
     }
   }
 }
 </script>
+<style lang="scss">
+.role-box .el-tabs__content {
+  height: calc(100vh - 100px);
+  overflow: auto;
+}
+</style>

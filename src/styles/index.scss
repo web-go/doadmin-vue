@@ -196,3 +196,17 @@ aside {
 .multiselect--active {
   z-index: 1000 !important;
 }
+
+.clearflex {
+  *zoom: 1;
+  &:after {
+    content: '';
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+  }
+}
+.fl-right {
+  float: right;
+}

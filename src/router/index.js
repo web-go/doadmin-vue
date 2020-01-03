@@ -113,6 +113,18 @@ export const constantRoutes = [
     // ]
   },
   {
+    path: '/403',
+    component: Layout,
+    children: [
+      {
+        path: '/',
+        component: () => import('@/views/403'),
+        name: '403'
+      }
+    ],
+    hidden: true
+  },
+  {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true

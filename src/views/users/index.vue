@@ -74,6 +74,17 @@ export default {
       }
     }
   },
+
+  created() {
+    getUsers()
+      .then(res => {
+        this.data = res.data
+        console.log(this.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
   methods: {
     handleDialogOpen({ mode }) {
       this.$message({
@@ -130,16 +141,6 @@ export default {
       })
       done()
     }
-  },
-  created() {
-    getUsers()
-      .then(res => {
-        this.data = res.data
-        console.log(this.data)
-      })
-      .catch(err => {
-        console.log(err)
-      })
   }
 }
 </script>
