@@ -2,16 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input
-        v-model="listQuery.name"
+        v-model="listQuery.description"
         clearable
-        placeholder="名称"
+        placeholder="简介"
         style="width: 200px;"
         class="filter-item"
         @keyup.enter.native="handleFilter"
       />
 
       <el-button
-        v-waves
         class="filter-item"
         type="primary"
         icon="el-icon-search"
@@ -19,14 +18,15 @@
       >
         搜索
       </el-button>
+
       <el-button
         class="filter-item"
         style="margin-left: 10px;"
         type="primary"
-        icon="el-icon-edit"
+        icon="el-icon-plus"
         @click="handleCreate"
       >
-        添加
+        新建
       </el-button>
     </div>
 
@@ -40,41 +40,25 @@
       style="width: 100%;"
       @sort-change="sortChange"
     >
-      <el-table-column
-        label="ID"
-        prop="id"
-        sortable="custom"
-        align="center"
-        width="80"
-        :class-name="getSortClass('id')"
-      >
-        <template slot-scope="{ row }">
-          <span>{{ row.id }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="名称" min-width="150px" prop="name" />
-      <!-- <el-table-column label="创建时间" align="center">
-        <template slot-scope="{ row }">
-          <span>{{ row.created_at | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
-        </template>
-      </el-table-column> -->
+      <el-table-column label="ID" prop="id" align="center" width="100" />
+      <el-table-column label="路径" prop="path" />
+      <el-table-column label="方法" prop="method" />
+      <el-table-column label="分组" prop="group" />
+      <el-table-column label="简介" prop="description" />
 
-      <el-table-column
-        label="操作"
-        align="center"
-        width="230"
-        class-name="small-padding fixed-width"
-      >
+      <el-table-column label="操作" align="center" width="200">
         <template slot-scope="{ row }">
-          <!-- <el-button type="primary" size="mini" @click="handleUpdate(row)">
+          <el-button
+            type="primary"
+            size="mini"
+            plain
+            @click="handleUpdate(row)"
+          >
             修改
-          </el-button> -->
-          <el-button size="mini" type="success" @click="opdendrawer(row)">
-            设置权限
           </el-button>
 
           <el-popconfirm title="确定删除？" @onConfirm="handleDelete(row)">
-            <el-button slot="reference" size="mini" type="danger">
+            <el-button slot="reference" size="mini" type="danger" plain>
               删除
             </el-button>
           </el-popconfirm>
@@ -99,8 +83,24 @@
         label-width="70px"
         style="width: 400px; margin-left:50px;"
       >
-        <el-form-item label="名称" prop="name">
-          <el-input v-model="temp.name" />
+        <el-form-item label="路径" prop="path">
+          <el-input v-model="temp.path" />
+        </el-form-item>
+        <el-form-item label="方法" prop="method">
+          <el-select v-model="temp.method" placeholder="请选择">
+            <el-option
+              v-for="item in methods"
+              :key="item.key"
+              :label="item.display_name"
+              :value="item.key"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="简介" prop="description">
+          <el-input v-model="temp.description" />
+        </el-form-item>
+        <el-form-item label="分组" prop="group">
+          <el-input v-model="temp.group" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -115,79 +115,36 @@
         </el-button>
       </div>
     </el-dialog>
-
-    <el-drawer
-      v-if="drawer"
-      :visible.sync="drawer"
-      :with-header="true"
-      size="40%"
-      title="角色配置"
-    >
-      <el-tabs class="role-box" type="border-card">
-        <el-tab-pane label="角色菜单">
-          <menus :row="activeRow" />
-        </el-tab-pane>
-        <el-tab-pane label="角色api">
-          <apis :row="activeRow" />
-        </el-tab-pane>
-      </el-tabs>
-    </el-drawer>
   </div>
 </template>
 
 <script>
-import Menus from './components/menus'
-import Apis from './components/apis'
-import { fetchRoles, createRole, updateRole, deleteRole } from '@/api/roles'
-import waves from '@/directive/waves' // waves directive
+import { fetchApis, createApi, updateApi, deleteApi } from '@/api/api'
 import Pagination from '@/components/Pagination' // secondary package based on el-pagination
-
-const calendarTypeOptions = [
-  { key: 'CN', display_name: 'China' },
-  { key: 'US', display_name: 'USA' },
-  { key: 'JP', display_name: 'Japan' },
-  { key: 'EU', display_name: 'Eurozone' }
-]
-
-// arr to obj, such as { CN : "China", US : "USA" }
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   name: 'ComplexTable',
-  components: { Pagination, Menus, Apis },
-  directives: { waves },
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        published: 'success',
-        draft: 'info',
-        deleted: 'danger'
-      }
-      return statusMap[status]
-    },
-    typeFilter(type) {
-      return calendarTypeKeyValue[type]
-    }
-  },
+  components: { Pagination },
 
   data() {
     return {
-      tableKey: 0,
       list: null,
       total: 0,
       listLoading: true,
       listQuery: {
         page: 1,
         limit: 20,
-        name: ''
+        description: ''
       },
 
       temp: {
         id: undefined,
-        name: ''
+        name: '',
+        paht: '',
+        method: '',
+        group: '',
+        description: '',
+        hidden: false
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -197,17 +154,17 @@ export default {
       },
 
       rules: {
-        name: [{ required: true, message: '名称必填', trigger: 'blur' }]
-      },
-
-      drawer: false,
-      activeRow: {}
+        path: [{ required: true, message: '路径必填', trigger: 'blur' }],
+        method: [{ required: true, message: '方法必填', trigger: 'blur' }],
+        group: [{ required: true, message: '分组必填', trigger: 'blur' }],
+        description: [{ required: true, message: '简介必填', trigger: 'blur' }]
+      }
     }
   },
   computed: {
     searchQuery() {
       return {
-        query: `name:${this.listQuery.name}:like`,
+        query: `description:${this.listQuery.description}:like`,
         page: this.listQuery.page,
         limit: this.listQuery.limit
       }
@@ -217,15 +174,10 @@ export default {
     this.getList()
   },
   methods: {
-    opdendrawer(row) {
-      this.drawer = true
-      this.activeRow = row
-    },
     getList() {
       this.listLoading = true
 
-      fetchRoles(this.searchQuery).then(response => {
-        console.log(response)
+      fetchApis(this.searchQuery).then(response => {
         this.list = response.data
         this.total = response.pagination.total_record
         this.listLoading = false
@@ -235,27 +187,7 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleModifyStatus(row, status) {
-      this.$message({
-        message: '操作Success',
-        type: 'success'
-      })
-      row.status = status
-    },
-    sortChange(data) {
-      const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+id'
-      } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
+
     resetTemp() {
       this.temp = {
         id: undefined,
@@ -275,10 +207,10 @@ export default {
     createData() {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
-          createRole(this.temp)
+          createApi(this.temp)
             .then(response => {
               console.log(response)
-              this.list.unshift(response.data.role)
+              this.list.unshift(response.data.api)
               this.dialogFormVisible = false
               this.$notify({
                 title: '成功',
@@ -303,10 +235,7 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          console.log(tempData)
-          delete tempData['menus']
-          delete tempData['apis']
-          updateRole(tempData)
+          updateApi(tempData)
             .then(() => {
               for (const v of this.list) {
                 if (v.id === this.temp.id) {
@@ -330,17 +259,10 @@ export default {
       })
     },
     handleDelete(row) {
-      // this.$notify({
-      //   title: '成功',
-      //   message: '删除成功',
-      //   type: 'success',
-      //   duration: 2000
-      // })
-
       this.deleteData(row)
     },
     deleteData(row) {
-      deleteRole(row)
+      deleteApi(row)
         .then(response => {
           this.$notify({
             title: '成功',
@@ -359,22 +281,7 @@ export default {
             duration: 2000
           })
         })
-    },
-    getSortClass: function(key) {
-      // const sort = this.listQuery.sort
-      return 'descending'
-      // return sort === `+${key}`
-      //   ? 'ascending'
-      //   : sort === `-${key}`
-      //   ? 'descending'
-      //   : ''
     }
   }
 }
 </script>
-<style lang="scss">
-.role-box .el-tabs__content {
-  height: calc(100vh - 100px);
-  overflow: auto;
-}
-</style>

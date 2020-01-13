@@ -55,19 +55,6 @@ export default {
       }
     })
     this.menuTreeIds = arr
-
-    //   const res1 = await getMenuAuthority({ authorityId: this.row.authorityId })
-    //   const menus = res1.data.menus
-    //   const arr = []
-    //   menus.map(item => {
-    //     // 防止直接选中父级造成全选
-    //     if (!menus.some(same => same.parentId === item.menuId)) {
-    //       arr.push(Number(item.menuId))
-    //     }
-    //   })
-    // this.row.menus.map(menu => this.menuTreeIds.push(Number(menu.id)))
-    // console.log(this.menuTreeIds)
-    // this.menuTreeIds = [8, 6]
   },
 
   methods: {
@@ -87,12 +74,6 @@ export default {
       }
       this.$set(this.row, 'menus', res.menus)
       console.log(res)
-      // if (res.success) {
-      //   this.$message({
-      //     type: 'success',
-      //     message: '添加成功!'
-      //   })
-      // }
     }
   }
 }

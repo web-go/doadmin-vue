@@ -25,6 +25,12 @@ export const dataArrayToRoutes = data => {
         let sub_view = tmp.component
         sub_view = sub_view.replace(/^\/*/g, '')
         tmp.component = _import(sub_view)
+        tmp.meta = {
+          ...tmp.meta,
+          beforeResolve(routeTo, routeFrom, next) {
+            console.log(routeTo, routeFrom, next, 'ok')
+          }
+        }
       }
     }
     if (tmp.children && tmp.children.length > 0) {

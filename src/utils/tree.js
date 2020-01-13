@@ -1,4 +1,19 @@
+// function keysrt(key, desc) {
+//   return function(a, b) {
+//     return desc ? ~~(a[key] < b[key]) : ~~(a[key] > b[key])
+//   }
+// }
+function compare(property) {
+  return function(a, b) {
+    var value1 = a[property]
+    var value2 = b[property]
+    return value1 - value2
+  }
+}
+
 export function transformTozTreeFormat(sNodes) {
+  sNodes.sort(compare('position'))
+  console.log('snodes', sNodes)
   let i, l
   var r = []
   var tmpMap = {}

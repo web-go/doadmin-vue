@@ -29,3 +29,50 @@ export function logout() {
     method: 'post'
   })
 }
+
+// user api
+export function fetchUsers(query) {
+  return request({
+    url: '/users',
+    method: 'get',
+    params: query
+  })
+}
+
+export function fetchUser(id) {
+  return request({
+    url: '/users/' + id,
+    method: 'get'
+  })
+}
+
+export function createUser(data) {
+  return request({
+    url: '/users',
+    method: 'post',
+    data
+  })
+}
+
+export function updateUser(data) {
+  return request({
+    url: '/users/' + data.id,
+    method: 'put',
+    data
+  })
+}
+
+export function deleteUser(data) {
+  return request({
+    url: '/users/' + data.id,
+    method: 'delete'
+  })
+}
+
+export function addUserRoles(id, data) {
+  return request({
+    url: '/users/' + id + '/roles',
+    method: 'post',
+    data
+  })
+}
