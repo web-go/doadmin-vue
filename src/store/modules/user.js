@@ -30,7 +30,7 @@ const mutations = {
 const actions = {
   // user login
   login({ commit }, userInfo) {
-    console.log(userInfo, 'userinfo')
+    // console.log(userInfo, 'userinfo')
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password })
@@ -48,7 +48,6 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
-    console.log(state, 'state is')
     return new Promise((resolve, reject) => {
       getInfo(state.token)
         .then(response => {

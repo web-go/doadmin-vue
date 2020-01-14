@@ -13,7 +13,6 @@ function compare(property) {
 
 export function transformTozTreeFormat(sNodes) {
   sNodes.sort(compare('position'))
-  console.log('snodes', sNodes)
   let i, l
   var r = []
   var tmpMap = {}

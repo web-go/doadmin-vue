@@ -303,7 +303,6 @@ export default {
       this.$refs['dataForm'].validate(valid => {
         if (valid) {
           const tempData = Object.assign({}, this.temp)
-          console.log(tempData)
           delete tempData['menus']
           delete tempData['apis']
           updateApi(tempData)

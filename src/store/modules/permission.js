@@ -78,7 +78,7 @@ const actions = {
       ]
 
       asyncRouter = transformTozTreeFormat(menus)
-      console.log(asyncRouter, 'asnyc')
+      // console.log(asyncRouter, 'asnyc')
       // baseRouter[0].children = asyncRouter
       // baseRouter[0].children = [
       //   {

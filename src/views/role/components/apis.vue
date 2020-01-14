@@ -47,10 +47,14 @@ export default {
 
   async created() {
     // 获取api并整理成树结构
-    const res = await fetchApis({ limit: 9999 })
-    const apis = res.data
-    this.apiTreeData = this.buildApiTree(apis)
-    this.row.apis.map(api => this.apiTreeIds.push(api.id))
+    try {
+      const res = await fetchApis({ limit: 9999 })
+      const apis = res.data
+      this.apiTreeData = this.buildApiTree(apis)
+      this.row.apis.map(api => this.apiTreeIds.push(api.id))
+    } catch (error) {
+      console.log(error)
+    }
   },
 
   methods: {
