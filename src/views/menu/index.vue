@@ -194,7 +194,7 @@ export default {
       }
     },
     selectList() {
-      const list = this.list.slice()
+      const list = this.list.slice().filter(item => item.parent_id === 0)
       list.unshift({ id: 0, title: '无上级' })
       return list
       // return list

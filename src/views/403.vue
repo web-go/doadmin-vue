@@ -46,7 +46,7 @@ export default {
   name: 'Page403',
   computed: {
     message() {
-      return '网管说你无权限进入......'
+      return '你没有权限进入......'
     }
   }
 }

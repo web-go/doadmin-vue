@@ -65,9 +65,16 @@
             修改
           </el-button>
 
-          <el-button size="mini" type="primary" plain @click="opdendrawer(row)">
-            设置角色
-          </el-button>
+          <span>
+            <el-button
+              size="mini"
+              type="success"
+              plain
+              @click="opdendrawer(row)"
+            >
+              设置角色
+            </el-button>
+          </span>
 
           <el-popconfirm title="确定删除？" @onConfirm="handleDelete(row)">
             <el-button slot="reference" size="mini" type="danger" plain>
@@ -101,10 +108,10 @@
           <el-input v-model="temp.nickname" />
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="temp.password" />
+          <el-input v-model="temp.password" type="password" />
         </el-form-item>
         <el-form-item label="确认密码" prop="password_confirmation">
-          <el-input v-model="temp.password_confirmation" />
+          <el-input v-model="temp.password_confirmation" type="password" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
